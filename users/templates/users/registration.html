@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {{ user_form.non_field_errors }}
     <div class="form-group">
     {% csrf_token %}

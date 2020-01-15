@@ -8,14 +8,13 @@ def user_registration(request):
     profile_form = UserProfileForm()
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile = UserProfileForm(request.POST)
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
             profile.save()
-
             return redirect('/')
-
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
