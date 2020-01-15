@@ -1,8 +1,50 @@
 {% extends 'users/base.html' %}
 {% block content %}
   <form method="post">
+    {{ form.non_field_errors }}
+    <div class="form-group">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    <small id="usernameHelp" class="form-text text-muted">{{ form.username.errors }}</small>
+    </div>
+
+        <div class="form-group">
+    {% csrf_token %}
+    {{ form.email.label_tag }}
+    {{ form.email }}
+    <small id="emailHelp" class="form-text text-muted">{{ form.email.errors }}</small>
+    </div>
+
+        <div class="form-group">
+    {% csrf_token %}
+    {{ form.first_name.label_tag }}
+    {{ form.first_name }}
+    <small id="first_nameHelp" class="form-text text-muted">{{ form.first_name.errors }}</small>
+    </div>
+
+        <div class="form-group">
+    {% csrf_token %}
+    {{ form.last_name.label_tag }}
+    {{ form.last_name }}
+    <small id="second_nameHelp" class="form-text text-muted">{{ form.last_name.errors }}</small>
+    </div>
+
+        <div class="form-group">
+    {% csrf_token %}
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+    <small id="password1Help" class="form-text text-muted">{{ form.password1.errors }}</small>
+    </div>
+
+        <div class="form-group">
+    {% csrf_token %}
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+    <small id="password2Help" class="form-text text-muted">{{ form.password2.errors }}</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sign up</button>
+
   </form>
 {% endblock %}
