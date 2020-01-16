@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, UserProfileForm
+from django.urls import reverse
+from .forms import RegistrationForm, UserProfileForm, LoginForm
 
 
 def user_registration(request):
@@ -19,3 +20,24 @@ def user_registration(request):
         "user_form": user_form,
         "profile_form": profile_form,
     })
+
+
+def user_login(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                return redirect(reverse('user_profile'))
+            # else: flash message ...
+
+    return render(request, 'users/login.html', {
+        'form': form,
+        'title': 'Login page'
+    })
+
+
+def user_profile(request):
+    return render(request, 'users/profile.html')
