@@ -2,43 +2,38 @@
 {% block content %}
   <form method="post" enctype="multipart/form-data">
     {{ user_form.non_field_errors }}
+     {% csrf_token %}
     <div class="form-group">
-    {% csrf_token %}
     {{ user_form.username.label_tag }}
     {{ user_form.username }}
     <small id="usernameHelp" class="form-text text-muted">{{ user_form.username.errors }}</small>
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
     {{ user_form.email.label_tag }}
     {{ user_form.email }}
     <small id="emailHelp" class="form-text text-muted">{{ user_form.email.errors }}</small>
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
     {{ user_form.first_name.label_tag }}
     {{ user_form.first_name }}
     <small id="first_nameHelp" class="form-text text-muted">{{ user_form.first_name.errors }}</small>
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
     {{ user_form.last_name.label_tag }}
     {{ user_form.last_name }}
     <small id="second_nameHelp" class="form-text text-muted">{{ user_form.last_name.errors }}</small>
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
     {{ profile_form.birthday.label_tag }}
     {{ profile_form.birthday }}
     <small id="birthdayHelp" class="form-text text-muted">{{ profile_form.birthday.errors }}</small>
     </div>
 
      <div class="form-group">
-    {% csrf_token %}
        <div class="input-group-prepend">
          {{ profile_form.avatar.label_tag }}
        </div>
@@ -52,21 +47,12 @@
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
-    {{ profile_form.status.label_tag }}
-    {{ profile_form.status }}
-    <small id="statusHelp" class="form-text text-muted">{{ profile_form.status.errors }}</small>
-    </div>
-
-    <div class="form-group">
-    {% csrf_token %}
     {{ user_form.password1.label_tag }}
     {{ user_form.password1 }}
     <small id="password1Help" class="form-text text-muted">{{ user_form.password1.errors }}</small>
     </div>
 
     <div class="form-group">
-    {% csrf_token %}
     {{ user_form.password2.label_tag }}
     {{ user_form.password2 }}
     <small id="password2Help" class="form-text text-muted">{{ user_form.password2.errors }}</small>
