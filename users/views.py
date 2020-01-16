@@ -18,7 +18,7 @@ def user_registration(request):
             profile.user = user
             profile.save()
             messages.success(request, 'Successful registration')
-            return redirect(reverse('user_profile'))
+            return redirect(reverse('users:profile'))
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
@@ -34,7 +34,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Congratulations! Now you logged in.")
-                return redirect(reverse('user_profile'))
+                return redirect('users:profile')
             else:
                 messages.error(request, "Invalid username or password!")
         else:
