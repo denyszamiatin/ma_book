@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 from .forms import RegistrationForm, UserProfileForm, LoginForm
 from django.contrib import messages
 
@@ -16,7 +17,8 @@ def user_registration(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            return redirect('/')
+            messages.success(request, 'Successful registration')
+            return redirect(reverse('user_profile'))
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
