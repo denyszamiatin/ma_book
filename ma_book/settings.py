@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from environs import Env
+from django.contrib import messages
 
 env = Env()
 env.read_env()
@@ -131,3 +132,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MAX_STATUS_LENGTH = 500
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
