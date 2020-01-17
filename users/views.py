@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from .forms import RegistrationForm, UserProfileForm, LoginForm
+from django.contrib import messages
 
 
 def user_registration(request):
@@ -17,7 +18,7 @@ def user_registration(request):
             profile.user = user
             profile.save()
             messages.success(request, 'Successful registration')
-            return redirect(reverse('user_profile'))
+            return redirect(reverse('users:profile'))
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
@@ -32,9 +33,12 @@ def user_login(request):
             user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
-                return redirect(reverse('user_profile'))
-            # else: flash message ...
-
+                messages.success(request, "Congratulations! Now you logged in.")
+                return redirect('users:profile')
+            else:
+                messages.error(request, "Invalid username or password!")
+        else:
+            messages.error(request, "Invalid input!")
     return render(request, 'users/login.html', {
         'form': form,
         'title': 'Login page'
