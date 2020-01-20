@@ -1,11 +1,9 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm
 from .models import UserProfile
-from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm, EditUserAvatar
-from django.contrib import messages
+from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
 from .models import User
 
 
