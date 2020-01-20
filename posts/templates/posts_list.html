@@ -1,9 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
     {% for post in posts %}
-        <h1>{{ post.title }}</h1>
-        <p>{{ post.text }}</p>
-        <a href="edit_post?slug_title={{ post.slug_title }}">EDIT</a>
+        <div class="row">
+          <div class="span12">
+            <div class="row">
+              <div class="col-col-lg-2">
+                <h4><strong><a href="edit_post?slug_title={{ post.slug_title }}">{{ post.title }}</a></strong></h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-col-2">
+                <a href="#" class="thumbnail">
+                    <img src="http://placehold.it/260x180" alt="">
+                </a>
+              </div>
+              <div class="col col-8">
+                <p>
+                  {{ post.text|truncatechars:700 }}
+                </p>
+                <p><a class="btn" href="edit_post?slug_title={{ post.slug_title }}">Read more</a></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="span8">
+                <p></p>
+                <p>
+                  <i class="icon-user"></i> by <a href="#">{{ post.author }}</a>
+                  | <i class="icon-calendar"></i> {{ post.created_date }}
+                  | <i class="icon-comment"></i> <a href="#">3 Comments</a>
+                  | <i class="icon-share"></i> <a href="#">39 Shares</a>
+                  | <i class="icon-tags"></i> Tags : <a href="#"><span class="label label-info">Snipp</span></a>
+                  <a href="#"><span class="label label-info">Bootstrap</span></a>
+                  <a href="#"><span class="label label-info">UI</span></a>
+                  <a href="#"><span class="label label-info">growth</span></a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
     {% endfor %}
-
 {% endblock %}

@@ -138,4 +138,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
+POSTS_PER_PAGE = 5
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
