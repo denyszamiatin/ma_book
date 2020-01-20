@@ -11,8 +11,7 @@ class Post(models.Model):
     slug_title = models.SlugField(max_length=60, unique=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug_title = slugify(self.title)
+        self.slug_title = slugify(self.title, allow_unicode=True)
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):

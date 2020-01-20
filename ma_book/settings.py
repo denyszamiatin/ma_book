@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig'
 ]
@@ -136,3 +137,5 @@ MAX_STATUS_LENGTH = 500
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
