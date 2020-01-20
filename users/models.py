@@ -17,5 +17,19 @@ class UserProfile(models.Model):
     status = models.CharField(max_length=MAX_STATUS_LENGTH, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
-        return self.user.username
+
+# class Follower(models.Model):
+#     user_from = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+#     user_to = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+#     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+#
+#     class Meta:
+#         unique_together = ('follower', 'following')
+#
+#     def __str__(self):
+#         return "{} follows {}".format(self.user_from, self.user_to)
+#
+#
+# UserProfile.add_to_class('following', models.ManyToManyField(
+#     'self', through=Follower, related_name='followers', symmetrical=False
+# ))

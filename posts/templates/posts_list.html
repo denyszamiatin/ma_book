@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for post in posts %}
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.text }}</p>
+        <a href="edit_post?slug_title={{ post.slug_title }}">EDIT</a>
+    {% endfor %}
+
+{% endblock %}
