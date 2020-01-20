@@ -63,4 +63,10 @@ class EditUserForm(forms.ModelForm):
 class EditUserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = 'birthday', 'avatar', 'status'
+        fields = 'birthday', 'status'
+
+
+class EditUserAvatar(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar']

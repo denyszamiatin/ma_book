@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm
 from .models import UserProfile
-from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm
+from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm, EditUserAvatar
 from django.contrib import messages
 from .models import User
 
@@ -48,8 +48,8 @@ def user_login(request):
     })
 
 
-def user_profile(request, username):
-    return render(request, 'users/profile.html', {"username": username})
+def user_profile(request):
+    return render(request, 'users/profile.html')
 
 
 def search(request):
@@ -75,18 +75,18 @@ def search(request):
     return render(request, 'users/search.html', {'form': form, 'search_result': search_result, 'option': option, "options": options})
 
 
-def user_profile(request):
-    return render(request, 'users/profile.html')
-
-
 def edit_user_profile(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
-    print(profile.avatar)
     user_form = EditUserForm(instance=request.user)
+    profile = UserProfile.objects.get(user=request.user)
     profile_form = EditUserProfileForm(instance=profile)
     if request.method == 'POST':
         user_form = EditUserForm(request.POST, instance=request.user)
         profile_form = EditUserProfileForm(request.POST, instance=profile)
+        avatar_form = EditUserAvatar(request.POST, request.FILES, instance=profile)
+        print(avatar_form)
+        if avatar_form.is_valid():
+            avatar_form.user = request.user
+            avatar_form.save()
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.user = request.user
@@ -95,5 +95,5 @@ def edit_user_profile(request):
     return render(request, 'users/edit.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'img': profile,
+        'img': profile.avatar.url,
     })
