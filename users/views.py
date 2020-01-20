@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm
+from .models import UserProfile
+from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm
 from django.contrib import messages
 from .models import User
 
@@ -70,5 +72,28 @@ def search(request):
                 searched = User.objects.values('first_name', 'last_name', 'username')
                 search_result = [user['username'] for user in searched if
                           (user['first_name'].lower() + " " + user['last_name'].lower()).startswith(query.lower())]
-
     return render(request, 'users/search.html', {'form': form, 'search_result': search_result, 'option': option, "options": options})
+
+
+def user_profile(request):
+    return render(request, 'users/profile.html')
+
+
+def edit_user_profile(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    print(profile.avatar)
+    user_form = EditUserForm(instance=request.user)
+    profile_form = EditUserProfileForm(instance=profile)
+    if request.method == 'POST':
+        user_form = EditUserForm(request.POST, instance=request.user)
+        profile_form = EditUserProfileForm(request.POST, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.user = request.user
+            profile_form.save()
+            return redirect(reverse('users:profile'))
+    return render(request, 'users/edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'img': profile,
+    })

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    <div>
+        <img src="https://klike.net/uploads/posts/2019-03/1551511784_4.jpg" style="width: 60px">
+    </div>
+    <p>
+        <input type="submit" value="Save">
+    </p>
+</form>
+{% endblock %}

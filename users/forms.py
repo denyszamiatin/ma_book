@@ -52,3 +52,15 @@ class LoginForm(forms.Form):
 class SearchForm(forms.Form):
     query = forms.CharField(max_length=320, widget=forms.TextInput(attrs={'class': 'form-control',
                                                                           'placeholder': 'Query'}))
+
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = 'first_name', 'last_name', 'email'
+
+
+class EditUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = 'birthday', 'avatar', 'status'
