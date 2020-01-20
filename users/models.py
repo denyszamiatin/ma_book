@@ -8,7 +8,7 @@ from ma_book.settings import MEDIA_ROOT, MEDIA_URL
 def content_file_name(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{instance.user.username}.{ext}"
-    return Path(MEDIA_ROOT, "avatars", filename)
+    return Path("avatars", filename)
 
 
 class UserProfile(models.Model):
