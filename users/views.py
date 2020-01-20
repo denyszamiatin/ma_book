@@ -2,8 +2,9 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .forms import RegistrationForm, UserProfileForm, LoginForm
+from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm
 from django.contrib import messages
+from .models import User
 
 
 def user_registration(request):
@@ -45,5 +46,29 @@ def user_login(request):
     })
 
 
-def user_profile(request):
-    return render(request, 'users/profile.html')
+def user_profile(request, username):
+    return render(request, 'users/profile.html', {"username": username})
+
+
+def search(request):
+    form = SearchForm()
+    options = ('username', 'email', 'name')
+    option = ''
+    search_result = []
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+        if 'query' in request.GET:
+            query = request.GET['query']
+            option = request.GET['option']
+            if option == 'username':
+                searched = User.objects.filter(username__startswith=query).values('username')
+                search_result = [username['username'] for username in searched]
+            elif option == 'email':
+                searched = User.objects.filter(email__startswith=query).values('username')
+                search_result = [username['username'] for username in searched]
+            elif option == 'name':
+                searched = User.objects.values('first_name', 'last_name', 'username')
+                search_result = [user['username'] for user in searched if
+                          (user['first_name'].lower() + " " + user['last_name'].lower()).startswith(query.lower())]
+
+    return render(request, 'users/search.html', {'form': form, 'search_result': search_result, 'option': option, "options": options})

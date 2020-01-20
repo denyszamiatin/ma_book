@@ -1,0 +1,32 @@
+{%extends "base.html" %}
+{% block title %}Search{% endblock %}
+{%block content %}
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h1 class="mt-2">Search</h1>
+            <form>
+                Search by:
+                <select name="option">
+                    {% for option in options%}
+                        <option value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                {{ form.query }}
+                <br>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        <br>
+        {% if search_result %}
+            <h1 class="mt-2">Result</h1>
+        {% endif %}
+        <br>
+        {% for user in search_result %}
+        <ul>
+            <li><a href="user/profile/{{user}}">{{user}}</a></li>
+        </ul>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
