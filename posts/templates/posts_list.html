@@ -5,7 +5,7 @@
           <div class="span12">
             <div class="row">
               <div class="col-col-lg-2">
-                <h4><strong><a href="edit_post?slug_title={{ post.slug_title }}">{{ post.title }}</a></strong></h4>
+                <h4><strong><a href="edit?slug_title={{ post.slug_title }}">{{ post.title }}</a></strong></h4>
               </div>
             </div>
             <div class="row">
@@ -18,7 +18,7 @@
                 <p>
                   {{ post.text|truncatechars:700 }}
                 </p>
-                <p><a class="btn" href="edit_post?slug_title={{ post.slug_title }}">Read more</a></p>
+                <p><a class="btn" href="edit?slug_title={{ post.slug_title }}">Read more</a></p>
               </div>
             </div>
             <div class="row">
@@ -28,7 +28,6 @@
                   <i class="icon-user"></i> by <a href="#">{{ post.author }}</a>
                   | <i class="icon-calendar"></i> {{ post.created_date }}
                   | <i class="icon-comment"></i> <a href="#">3 Comments</a>
-                  | <i class="icon-share"></i> <a href="#">39 Shares</a>
                   | <i class="icon-tags"></i> Tags : <a href="#"><span class="label label-info">Snipp</span></a>
                   <a href="#"><span class="label label-info">Bootstrap</span></a>
                   <a href="#"><span class="label label-info">UI</span></a>
