@@ -83,11 +83,14 @@ def edit_user_profile(request):
         user_form = EditUserForm(request.POST, instance=request.user)
         profile_form = EditUserProfileForm(request.POST, instance=profile)
         avatar_form = EditUserAvatar(request.POST, request.FILES, instance=profile)
-        print(avatar_form)
-        if avatar_form.is_valid():
+        if avatar_form.is_valid() and user_form.is_valid() and profile_form.is_valid():
             avatar_form.user = request.user
+            profile_form.user = request.user
             avatar_form.save()
-        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect(reverse('users:profile'))
+        elif user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.user = request.user
             profile_form.save()
