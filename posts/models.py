@@ -16,3 +16,11 @@ class Post(models.Model):
 
     def __str__(self):
         return f'title:{self.title}, author: {self.author}'
+
+
+class HashTag(models.Model):
+    hashtag = models.CharField(max_length=45, unique=True)
+    posts = models.ManyToManyField(Post)
+
+    def __str__(self):
+        return f'title:{self.hashtag}'
