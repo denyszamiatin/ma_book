@@ -23,6 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('users.urls', namespace='users')),
     path('posts/', include('posts.urls', namespace='posts')),
-    path('user/', include('users.urls', namespace='users.login')),
-    path('user/', include('users.urls', namespace='users.profile'))
+    path('gallery/', include('gallery.urls', namespace='gallery')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
