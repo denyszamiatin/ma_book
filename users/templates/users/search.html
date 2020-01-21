@@ -21,16 +21,16 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         <br>
-        {% if selected_option %}
+        {% if search_result%}
             <h1 class="mt-2">Result</h1>
         {% endif %}
         <br>
-        {% if not search_result %}
+        {% if not search_result and selected_option %}
             No results by your query
         {% endif %}
         {% for user in search_result %}
         <ul>
-            <li><a href="user/profile/{{user}}">{{user}}</a></li>
+            <li><a href="user/profile/{{user.username}}">{{user.username}}</a></li>
         </ul>
         {% endfor %}
     </div>

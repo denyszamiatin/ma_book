@@ -53,7 +53,8 @@ def user_profile(request):
 def search(request):
     form = SearchForm()
     options = ('username', 'email', 'name', 'birthday')
-    hint = selected_option = ''
+    selected_option = ''
+    hint = ''
     search_result = []
     if request.method == 'GET':
         form = SearchForm(request.GET)
@@ -61,19 +62,18 @@ def search(request):
             query = request.GET['query']
             selected_option = request.GET['selected_option']
             if selected_option == 'username':
-                users = User.objects.filter(username__startswith=query).values('username')
-                search_result = [user['username'] for user in users]
+                search_result = User.objects.filter(username__startswith=query).values('username')
             elif selected_option == 'email':
-                users = User.objects.filter(email__startswith=query).values('username')
-                search_result = [user['username'] for user in users]
+                search_result = User.objects.filter(email__startswith=query).values('username')
             elif selected_option == 'name':
                 users = User.objects.values('first_name', 'last_name', 'username')
-                search_result = [user['username'] for user in users if
-                                (user['first_name'].lower() + " " + user['last_name'].lower()).startswith(query.lower())]
+                search_result = [user for user in users if
+                                 (user['first_name'].lower() + " "
+                                  + user['last_name'].lower()).startswith(query.lower())]
             elif selected_option == "birthday":
                 try:
                     date = datetime.strptime(query, "%Y, %m, %d").date()
-                    search_result = [el.user.username for el in UserProfile.objects.filter(birthday=date)]
+                    search_result = [profile.user for profile in UserProfile.objects.filter(birthday=date)]
                 except ValueError:
                     hint = "Try to input birthday in format Year, month, date. Example: 1994, 16, 10"
 
