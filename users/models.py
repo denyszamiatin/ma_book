@@ -17,6 +17,9 @@ class UserProfile(models.Model):
     status = models.CharField(max_length=MAX_STATUS_LENGTH, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f'title:{self.birthday}'
+
 
 # class Follower(models.Model):
 #     user_from = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
