@@ -14,3 +14,8 @@ class EditPostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(),
         }
+
+
+class HashTagForm(forms.Form):
+    hash_tags = forms.CharField(max_length=150, required=False, widget=forms.TextInput(
+                            attrs={'placeholder': '#python #django'}))

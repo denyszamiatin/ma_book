@@ -19,8 +19,8 @@ class Post(models.Model):
 
 
 class HashTag(models.Model):
-    hashtag = models.CharField(max_length=45, unique=True)
+    hash_tag = models.CharField(max_length=45, unique=True)
     posts = models.ManyToManyField(Post)
 
     def __str__(self):
-        return f'title:{self.hashtag}'
+        return f'Hashtag:{self.hash_tag}'

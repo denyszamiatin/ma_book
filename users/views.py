@@ -75,7 +75,7 @@ def search(request):
                     date = datetime.strptime(query, "%Y, %m, %d").date()
                     search_result = [profile.user for profile in UserProfile.objects.filter(birthday=date)]
                 except ValueError:
-                    hint = "Try to input birthday in format Year, month, date. Example: 1994, 16, 10"
+                    hint = "Try to input birthday in format Year, month, date. Example: 1994, 10, 16"
 
     context = {'form': form,
                'search_result': search_result,
