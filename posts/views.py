@@ -39,5 +39,5 @@ def edit(request):
 
 
 def show(request):
-    post = Post.objects.filter(author=request.user.id)
+    post = Post.objects.filter(author=request.user.id).prefetch_related('tags')
     return render(request, 'posts_list.html', {'posts': post})
