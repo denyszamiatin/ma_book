@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from .models import User, UserProfile
-from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
+from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm, SearchForm, EditUserAvatar
 
 
 def user_registration(request):

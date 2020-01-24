@@ -19,5 +19,12 @@ def add(request):
     })
 
 
+def get_images(request):
+    images = Gallery.objects.filter(user=request.user)
+    return render(request, 'gallery/images.html', {
+        'images': images,
+    })
+
+
 def success(request):
     return HttpResponse('success uploaded')
