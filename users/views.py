@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from .models import User, UserProfile
-from .forms import RegistrationForm, UserProfileForm, LoginForm, EditUserForm, EditUserProfileForm, SearchForm, EditUserAvatar
+from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
+from datetime import datetime
 
 
 def user_registration(request):
@@ -51,25 +52,38 @@ def user_profile(request):
 
 def search(request):
     form = SearchForm()
-    options = ('username', 'email', 'name')
-    option = ''
+    options = ('username', 'email', 'name', 'birthday')
+    selected_option = ''
+    hint = ''
     search_result = []
     if request.method == 'GET':
         form = SearchForm(request.GET)
         if 'query' in request.GET:
             query = request.GET['query']
-            option = request.GET['option']
-            if option == 'username':
-                searched = User.objects.filter(username__startswith=query).values('username')
-                search_result = [username['username'] for username in searched]
-            elif option == 'email':
-                searched = User.objects.filter(email__startswith=query).values('username')
-                search_result = [username['username'] for username in searched]
-            elif option == 'name':
-                searched = User.objects.values('first_name', 'last_name', 'username')
-                search_result = [user['username'] for user in searched if
-                          (user['first_name'].lower() + " " + user['last_name'].lower()).startswith(query.lower())]
-    return render(request, 'users/search.html', {'form': form, 'search_result': search_result, 'option': option, "options": options})
+            selected_option = request.GET['selected_option']
+            if selected_option == 'username':
+                search_result = User.objects.filter(username__startswith=query).values('username')
+            elif selected_option == 'email':
+                search_result = User.objects.filter(email__startswith=query).values('username')
+            elif selected_option == 'name':
+                users = User.objects.values('first_name', 'last_name', 'username')
+                search_result = [user for user in users if
+                                 (user['first_name'].lower() + " "
+                                  + user['last_name'].lower()).startswith(query.lower())]
+            elif selected_option == "birthday":
+                try:
+                    date = datetime.strptime(query, "%Y, %m, %d").date()
+                    search_result = [profile.user for profile in UserProfile.objects.filter(birthday=date)]
+                except ValueError:
+                    hint = "Try to input birthday in format Year, month, date. Example: 1994, 10, 16"
+
+    context = {'form': form,
+               'search_result': search_result,
+               'selected_option': selected_option,
+               "options": options,
+               "hint": hint,
+               }
+    return render(request, 'users/search.html', context)
 
 
 def edit_user_profile(request):

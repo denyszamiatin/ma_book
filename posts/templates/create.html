@@ -4,6 +4,7 @@
 <form method="post" class="post-form">{% csrf_token %}
 <h1> Create post</h1>
     {{ form|crispy }}
+    {{hash_tag_form|crispy}}
   <div class="form-group mt-3">
          <button type="submit" class="btn btn-primary">Create</button>
     </div>

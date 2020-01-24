@@ -6,24 +6,31 @@
         <h1 class="mt-2">Search</h1>
             <form>
                 Search by:
-                <select name="option">
+                <select name="selected_option">
                     {% for option in options%}
-                        <option value="{{option}}">{{option}}</option>
+                        <option value="{{option}}" {% if option == selected_option %}selected{% endif %}>{{option}}</option>
+
                     {% endfor %}
                 </select>
                 <br><br>
+                {% if hint %}
+                    {{hint}}
+                {% endif %}
                 {{ form.query }}
                 <br>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         <br>
-        {% if search_result %}
+        {% if selected_option %}
             <h1 class="mt-2">Result</h1>
         {% endif %}
         <br>
+        {% if not search_result and selected_option %}
+            No results by your query
+        {% endif %}
         {% for user in search_result %}
         <ul>
-            <li><a href="user/profile/{{user}}">{{user}}</a></li>
+            <li><a href="user/profile/{{user.username}}">{{user.username}}</a></li>
         </ul>
         {% endfor %}
     </div>
