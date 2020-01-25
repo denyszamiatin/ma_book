@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import User, UserProfile
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
-from datetime import datetime
 
 
 def user_registration(request):
@@ -52,37 +51,20 @@ def user_profile(request):
 
 def search(request):
     form = SearchForm()
-    options = ('username', 'email', 'name', 'birthday')
-    selected_option = ''
-    hint = ''
     search_result = []
     if request.method == 'GET':
         form = SearchForm(request.GET)
-        if 'query' in request.GET:
-            query = request.GET['query']
-            selected_option = request.GET['selected_option']
-            if selected_option == 'username':
-                search_result = User.objects.filter(username__startswith=query).values('username')
-            elif selected_option == 'email':
-                search_result = User.objects.filter(email__startswith=query).values('username')
-            elif selected_option == 'name':
-                users = User.objects.values('first_name', 'last_name', 'username')
-                search_result = [user for user in users if
-                                 (user['first_name'].lower() + " "
-                                  + user['last_name'].lower()).startswith(query.lower())]
-            elif selected_option == "birthday":
-                try:
-                    date = datetime.strptime(query, "%Y, %m, %d").date()
-                    search_result = [profile.user for profile in UserProfile.objects.filter(birthday=date)]
-                except ValueError:
-                    hint = "Try to input birthday in format Year, month, date. Example: 1994, 10, 16"
+        if form.is_valid():
+            fields = [(name, value) for name, value in form.cleaned_data.items() if value]
+            search_result = User.objects.all()
+            for field in fields:
+                if field[0] == 'birthday':
+                    filter_by = 'userprofile__' + field[0] + "__startswith"
+                else:
+                    filter_by = field[0] + "__startswith"
+                search_result = search_result.filter(**{filter_by: field[1]})
 
-    context = {'form': form,
-               'search_result': search_result,
-               'selected_option': selected_option,
-               "options": options,
-               "hint": hint,
-               }
+    context = {'form': form, 'search_result': search_result}
     return render(request, 'users/search.html', context)
 
 

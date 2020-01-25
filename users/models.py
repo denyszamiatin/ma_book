@@ -18,7 +18,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f'title:{self.birthday}'
+        return f'Username:{self.user}'
 
 
 # class Follower(models.Model):

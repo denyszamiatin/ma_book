@@ -50,8 +50,16 @@ class LoginForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    query = forms.CharField(max_length=320, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                          'placeholder': 'Query'}))
+    username = forms.CharField(max_length=150, required=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
+    first_name = forms.CharField(max_length=150, required=False,
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name'}))
+    last_name = forms.CharField(max_length=150, required=False,
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name'}))
+    email = forms.CharField(max_length=150, required=False,
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    birthday = forms.DateField(required=False,
+                               widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': '16.10.1994'}))
 
 
 class EditUserForm(forms.ModelForm):
