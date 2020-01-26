@@ -2,28 +2,29 @@
 {% load crispy_forms_tags %}
 {% block title %}Search{% endblock %}
 {%block content %}
-<div class="modal-body row">
-    <div class="col-md-5">
+<div class="row justify-content-center">
+    <div class="col-8">
         <h1 class="mt-2">Search</h1>
             <form>
-                {{ form|crispy }}
+                Search by:
+                <br><br>
+                {{ form|crispy}}
                 <br>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         <br>
-        </div>
-        <div class="col-md-7">
+        {% if submited %}
             <h1 class="mt-2">Result</h1>
-            <br>
-            {% if not search_result %}
-                <p>No results by your query</p>
-            {% endif %}
-            {% for user in search_result %}
-            <ul class="list-unstyled">
-                <li><a href="user/profile/{{user.username}}">{{user.username}}</a></li>
-            </ul>
-            {% endfor %}
-        </div>
+        {% endif %}
+        <br>
+        {% if not search_result and selected_option %}
+            No results by your query
+        {% endif %}
+        {% for user in search_result %}
+        <ul>
+            <li><a href="user/profile/{{user.username}}">{{user.username}}</a></li>
+        </ul>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -50,16 +50,14 @@ class LoginForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    username = forms.CharField(max_length=150, required=False,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
-    first_name = forms.CharField(max_length=150, required=False,
-                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name'}))
-    last_name = forms.CharField(max_length=150, required=False,
-                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name'}))
-    email = forms.CharField(max_length=150, required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    birthday = forms.DateField(required=False,
-                               widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': '16.10.1994'}))
+    username = forms.CharField(max_length=320, required=False, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                          'placeholder': 'Username'}))
+    name = forms.CharField(max_length=300, required=False, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                          'placeholder': 'Name'}))
+    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'class': 'form-control',
+                                                            'placeholder': 'example@mail.com'
+                                                            }))
+    birthday = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': '1994, 16, 10'}))
 
 
 class EditUserForm(forms.ModelForm):
