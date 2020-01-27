@@ -59,9 +59,9 @@ def search(request):
             search_result = User.objects
             for field in fields:
                 if field[0] == 'birthday':
-                    filter_by = 'userprofile__' + field[0] + "__startswith"
+                    filter_by = f'userprofile__{field[0]}__startswith'
                 else:
-                    filter_by = field[0] + "__startswith"
+                    filter_by = f'{field[0]}__startswith'
                 search_result = search_result.filter(**{filter_by: field[1]})
 
     context = {'form': form, 'search_result': search_result.all()}
