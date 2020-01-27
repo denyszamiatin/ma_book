@@ -56,7 +56,7 @@ def search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             fields = [(name, value) for name, value in form.cleaned_data.items() if value]
-            search_result = User.objects.all()
+            search_result = User.objects
             for field in fields:
                 if field[0] == 'birthday':
                     filter_by = 'userprofile__' + field[0] + "__startswith"
@@ -64,7 +64,7 @@ def search(request):
                     filter_by = field[0] + "__startswith"
                 search_result = search_result.filter(**{filter_by: field[1]})
 
-    context = {'form': form, 'search_result': search_result}
+    context = {'form': form, 'search_result': search_result.all()}
     return render(request, 'users/search.html', context)
 
 
