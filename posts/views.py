@@ -39,5 +39,14 @@ def edit(request):
 
 
 def show(request):
-    post = Post.objects.filter(author=request.user.id).prefetch_related('tags')
-    return render(request, 'posts_list.html', {'posts': post})
+    form = HashTagForm()
+    if request.method == "POST" and 'hash_tags' in request.POST :
+        form = HashTagForm(request.POST)
+        if form.is_valid():
+            pass
+    if 'hash_tag' in request.GET:
+        posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag']).prefetch_related('tags')
+    else:
+        posts = Post.objects.filter(author=request.user.id).prefetch_related('tags')
+    return render(request, 'posts_list.html', {'posts': posts,
+                                               'form': form})
