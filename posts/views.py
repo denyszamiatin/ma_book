@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.db import IntegrityError
 from .forms import PostForm, EditPostForm, HashTagForm
@@ -43,10 +44,17 @@ def show(request):
     if request.method == "POST" and 'hash_tags' in request.POST :
         form = HashTagForm(request.POST)
         if form.is_valid():
-            pass
-    if 'hash_tag' in request.GET:
-        posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag']).prefetch_related('tags')
+            hash_tags = form.cleaned_data['hash_tags'].split()
+            posts = Post.objects.filter(tags__hash_tag=hash_tags[0])
+            try:
+                for hash_tag in hash_tags[1:]:
+                    posts = posts.filter(tags__hash_tag=hash_tag)
+            except IndexError:
+                pass
+            print(posts)
+    elif 'hash_tag' in request.GET:
+        posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag'])
     else:
-        posts = Post.objects.filter(author=request.user.id).prefetch_related('tags')
+        posts = Post.objects.filter(author=request.user.id)
     return render(request, 'posts_list.html', {'posts': posts,
                                                'form': form})
