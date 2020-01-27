@@ -41,19 +41,15 @@ def edit(request):
 
 def show(request):
     form = HashTagForm()
-    if request.method == "POST" and 'hash_tags' in request.POST :
+    if request.method == "POST":
         form = HashTagForm(request.POST)
         if form.is_valid():
             hash_tags = form.cleaned_data['hash_tags'].split()
-            posts = Post.objects.filter(tags__hash_tag=hash_tags[0])
-            try:
-                for hash_tag in hash_tags[1:]:
-                    posts = posts.filter(tags__hash_tag=hash_tag)
-            except IndexError:
-                pass
+        for hash_tag in hash_tags:
+            posts = posts.filter(tags__hash_tag=hash_tag)
     elif 'hash_tag' in request.GET:
         posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag'])
     else:
         posts = Post.objects.filter(author=request.user.id)
-    return render(request, 'posts_list.html', {'posts': posts,
+    return render(request, 'posts_list.html', {'posts': posts.all(),
                                                'form': form})
