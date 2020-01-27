@@ -51,7 +51,6 @@ def show(request):
                     posts = posts.filter(tags__hash_tag=hash_tag)
             except IndexError:
                 pass
-            print(posts)
     elif 'hash_tag' in request.GET:
         posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag'])
     else:
