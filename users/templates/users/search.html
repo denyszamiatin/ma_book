@@ -20,7 +20,14 @@
             {% endif %}
             {% for user in search_result %}
             <ul class="list-unstyled">
-                <li><a href="user/profile/{{user.username}}">{{user.username}}</a></li>
+                <li>
+                    <a href="user/profile/{{user.username}}">{{user.username}}</a>
+                    {% if user in user_follows %}
+                        <a href="{% url 'users:unfollow' user.username %}"><button class="btn btn-default">Stop follow</button></a>
+                    {% else %}
+                        <a href="{% url 'users:follow' user.username %}"><button class="btn btn-default">Follow</button></a>
+                    {% endif %}
+                </li>
             </ul>
             {% endfor %}
         </div>

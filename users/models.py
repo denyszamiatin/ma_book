@@ -8,7 +8,7 @@ from ma_book.settings import MEDIA_ROOT, MEDIA_URL
 def content_file_name(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{instance.user.username}.{ext}"
-    return Path("avatars", filename)
+    return Path("media/avatars", filename)
 
 
 class UserProfile(models.Model):
@@ -21,18 +21,10 @@ class UserProfile(models.Model):
         return f'Username:{self.user}'
 
 
-# class Follower(models.Model):
-#     user_from = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-#     user_to = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-#
-#     class Meta:
-#         unique_together = ('follower', 'following')
-#
-#     def __str__(self):
-#         return "{} follows {}".format(self.user_from, self.user_to)
-#
-#
-# UserProfile.add_to_class('following', models.ManyToManyField(
-#     'self', through=Follower, related_name='followers', symmetrical=False
-# ))
+class Relations(models.Model):
+    current_user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="current_user")
+    follows = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed_by_current_user")
+    started = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    def __repr__(self):
+        return f"{self.current_user} follows {self.follows}"

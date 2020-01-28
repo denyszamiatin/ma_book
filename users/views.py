@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .models import User, UserProfile
+from django.contrib.auth.decorators import login_required
+from .models import User, UserProfile, Relations
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
 
 
@@ -52,6 +53,7 @@ def user_profile(request):
 def search(request):
     form = SearchForm()
     search_result = []
+    user_follows = [relation.follows for relation in Relations.objects.filter(current_user=request.user)]
     if request.method == 'GET':
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -64,7 +66,7 @@ def search(request):
                     filter_by = f'{field[0]}__startswith'
                 search_result = search_result.filter(**{filter_by: field[1]})
 
-    context = {'form': form, 'search_result': search_result.all()}
+    context = {'form': form, 'search_result': search_result.all(), 'user_follows': user_follows}
     return render(request, 'users/search.html', context)
 
 
@@ -93,3 +95,16 @@ def edit_user_profile(request):
         'profile_form': profile_form,
         'img': profile.avatar.url,
     })
+
+
+@login_required
+def follow(request, username):
+    new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
+    new_relation.save()
+    return redirect(reverse('users:search'))
+
+@login_required
+def unfollow(request, username):
+    old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
+    old_relation.delete()
+    return redirect(reverse('users:search'))
