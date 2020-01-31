@@ -19,7 +19,7 @@ def user_registration(request):
             profile.user = user
             profile.save()
             messages.success(request, 'Successful registration')
-            return redirect(reverse('users:profile'))
+            return redirect(reverse('users:login'))
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
