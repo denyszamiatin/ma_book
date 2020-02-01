@@ -7,9 +7,37 @@
             <img class="rounded-circle account-img" src="{{ user.userprofile.avatar.url }}">
             {% endif %}
             <div class="media-body">
-                <h1 class="account-heading">{{ user.username }}</h1>
-                <p class="text-secondary">{{ user.email }}</p>
+                {% if username == user.username %}
+                    <h1 class="account-heading">{{ user.username }}</h1>
+                    <p class="text-secondary">{{ user.email }}</p>
+                {% else %}
+                    <h3>You are watching <b>{{ username }}'s</b> profile</h3>
+                {% endif %}
             </div>
         </div>
+    </div>
+    <div class="container">
+        {% if my_followers %}
+            <h2>Your followers</h2>
+            <ul>
+            {% for follower in my_followers %}
+                <li>{{ follower.username }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <h2>You have no followers</h2>
+        {% endif %}
+    </div>
+    <div class="container">
+        {% if i_follow %}
+        <h2>People that you follow</h2>
+            <ul>
+            {% for person in i_follow %}
+                <li>{{ person.username }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <h2>You do not follow anyone</h2>
+        {% endif %}
     </div>
 {% endblock %}

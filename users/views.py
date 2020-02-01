@@ -31,11 +31,12 @@ def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            username = form.cleaned_data['username']
+            user = authenticate(request, username=username, password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
                 messages.success(request, "Congratulations! Now you logged in.")
-                return redirect('users:profile')
+                return redirect(f"/user/profile/{username}")
             else:
                 messages.error(request, "Invalid username or password!")
         else:
@@ -46,8 +47,18 @@ def user_login(request):
     })
 
 
-def user_profile(request):
-    return render(request, 'users/profile.html')
+@login_required
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    my_followers = [relation.current_user for relation in Relations.objects.filter(follows=user)]
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=user)]
+    context = {
+        'username': username,
+        'my_followers': my_followers,
+        'i_follow': i_follow
+    }
+    return render(request, 'users/profile.html', context)
+
 
 @login_required
 def search(request):

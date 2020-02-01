@@ -21,7 +21,7 @@
             {% for user in search_result %}
             <ul class="list-unstyled">
                 <li>
-                    <a href="user/profile/{{user.username}}">{{user.username}}</a>
+                    <a href="{% url 'users:profile' user.username %}">{{user.username}}</a>
                     {% if user in user_follows %}
                         <a href="{% url 'users:unfollow' user.username %}"><button type="button" class="btn btn-default">Stop follow</button></a>
                     {% else %}

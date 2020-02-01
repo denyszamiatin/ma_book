@@ -10,7 +10,7 @@ urlpatterns = [
     path('login', user_login, name='login'),
     path('logout', LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('edit', edit_user_profile, name='edit'),
-    path('profile', user_profile, name='profile'),
+    path('profile/<username>', user_profile, name='profile'),
     path('search', search, name='search'),
     path('follow/<username>', follow, name='follow'),
     path('unfollow/<username>', unfollow, name='unfollow')
