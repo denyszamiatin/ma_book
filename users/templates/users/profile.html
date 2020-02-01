@@ -3,7 +3,9 @@
 {% block content %}
     <div class="content-section">
         <div class="media">
+            {% if user.userprofile.avatar %}
             <img class="rounded-circle account-img" src="{{ user.userprofile.avatar.url }}">
+            {% endif %}
             <div class="media-body">
                 <h1 class="account-heading">{{ user.username }}</h1>
                 <p class="text-secondary">{{ user.email }}</p>

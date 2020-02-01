@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from environs import Env
 from django.contrib import messages
+from django.urls import reverse
 
 env = Env()
 env.read_env()
@@ -149,3 +150,4 @@ MESSAGE_TAGS = {
 
 POSTS_PER_PAGE = 5
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_URL = '/user/login'

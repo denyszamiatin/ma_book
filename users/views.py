@@ -49,7 +49,7 @@ def user_login(request):
 def user_profile(request):
     return render(request, 'users/profile.html')
 
-
+@login_required
 def search(request):
     form = SearchForm()
     search_result = []
