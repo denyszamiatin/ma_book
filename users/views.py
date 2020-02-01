@@ -64,7 +64,7 @@ def user_profile(request, username):
 def search(request):
     form = SearchForm()
     search_result = []
-    user_follows = [relation.follows for relation in Relations.objects.filter(current_user=request.user)]
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=request.user)]
     if request.method == 'GET':
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -77,7 +77,7 @@ def search(request):
                     filter_by = f'{field[0]}__startswith'
                 search_result = search_result.filter(**{filter_by: field[1]})
 
-    context = {'form': form, 'search_result': search_result.all(), 'user_follows': user_follows}
+    context = {'form': form, 'search_result': search_result.all(), 'i_follow': i_follow}
     return render(request, 'users/search.html', context)
 
 
@@ -110,12 +110,18 @@ def edit_user_profile(request):
 
 @login_required
 def follow(request, username):
-    new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
-    new_relation.save()
+    if Relations.objects.filter(current_user=request.user, follows=User.objects.get(username=username)):
+        messages.error(request, f'You already follow user {username}')
+    else:
+        new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
+        new_relation.save()
     return redirect(reverse('users:search'))
 
 @login_required
 def unfollow(request, username):
-    old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
-    old_relation.delete()
+    try:
+        old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
+        old_relation.delete()
+    except Relations.DoesNotExist:
+        messages.error(request, f"You already don't follow user {username}")
     return redirect(reverse('users:search'))

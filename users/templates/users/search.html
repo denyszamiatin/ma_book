@@ -22,7 +22,7 @@
             <ul class="list-unstyled">
                 <li>
                     <a href="{% url 'users:profile' user.username %}">{{user.username}}</a>
-                    {% if user in user_follows %}
+                    {% if user in i_follow %}
                         <a href="{% url 'users:unfollow' user.username %}"><button type="button" class="btn btn-default">Stop follow</button></a>
                     {% else %}
                         <a href="{% url 'users:follow' user.username %}"><button type="button" class="btn btn-default">Follow</button></a>
