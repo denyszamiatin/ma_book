@@ -2,9 +2,9 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .models import User, UserProfile
+from django.contrib.auth.decorators import login_required
+from .models import User, UserProfile, Relations
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
-from datetime import datetime
 
 
 def user_registration(request):
@@ -19,7 +19,7 @@ def user_registration(request):
             profile.user = user
             profile.save()
             messages.success(request, 'Successful registration')
-            return redirect(reverse('users:profile'))
+            return redirect(reverse('users:login'))
     return render(request, 'users/registration.html', {
         "user_form": user_form,
         "profile_form": profile_form,
@@ -31,11 +31,12 @@ def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            username = form.cleaned_data['username']
+            user = authenticate(request, username=username, password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
                 messages.success(request, "Congratulations! Now you logged in.")
-                return redirect('users:profile')
+                return redirect(f"/user/profile/{username}")
             else:
                 messages.error(request, "Invalid username or password!")
         else:
@@ -46,38 +47,37 @@ def user_login(request):
     })
 
 
-def user_profile(request):
-    return render(request, 'users/profile.html')
+@login_required
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    my_followers = [relation.current_user for relation in Relations.objects.filter(follows=user)]
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=user)]
+    context = {
+        'username': username,
+        'my_followers': my_followers,
+        'i_follow': i_follow
+    }
+    return render(request, 'users/profile.html', context)
 
 
+@login_required
 def search(request):
     form = SearchForm()
     search_result = []
+    user_follows = [relation.follows for relation in Relations.objects.filter(current_user=request.user)]
     if request.method == 'GET':
         form = SearchForm(request.GET)
         if form.is_valid():
-            x = [form.cleaned_data[field] for field in form.cleaned_data if form.cleaned_data[field]]
-            for val in x:
-                search_result =
+            fields = [(name, value) for name, value in form.cleaned_data.items() if value]
+            search_result = User.objects
+            for field in fields:
+                if field[0] == 'birthday':
+                    filter_by = f'userprofile__{field[0]}__startswith'
+                else:
+                    filter_by = f'{field[0]}__startswith'
+                search_result = search_result.filter(**{filter_by: field[1]})
 
-            # if selected_option == 'username':
-            #     search_result = User.objects.filter(username__startswith=query).values('username')
-            # elif selected_option == 'email':
-            #     search_result = User.objects.filter(email__startswith=query).values('username')
-            # elif selected_option == 'name':
-            #     search_result = User.objects.values('first_name', 'last_name', 'username')
-            # elif selected_option == "birthday":
-            #     try:
-            #         for p in UserProfile.objects.all():
-            #             print(p)
-            #         date = datetime.strptime(query, "%Y, %m, %d").date()
-            #         search_result = [profile.user for profile in UserProfile.objects.filter(birthday=date)]
-            #     except ValueError:
-            #         hint = "Try to input birthday in format Year, month, date. Example: 1994, 16, 10"
-
-    context = {'form': form,
-               'search_result': search_result,
-               }
+    context = {'form': form, 'search_result': search_result.all(), 'user_follows': user_follows}
     return render(request, 'users/search.html', context)
 
 
@@ -106,3 +106,16 @@ def edit_user_profile(request):
         'profile_form': profile_form,
         'img': profile.avatar.url,
     })
+
+
+@login_required
+def follow(request, username):
+    new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
+    new_relation.save()
+    return redirect(reverse('users:search'))
+
+@login_required
+def unfollow(request, username):
+    old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
+    old_relation.delete()
+    return redirect(reverse('users:search'))

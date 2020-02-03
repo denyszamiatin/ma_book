@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from environs import Env
 from django.contrib import messages
+from django.urls import reverse
 
 env = Env()
 env.read_env()
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
     'gallery.apps.GalleryConfig',
+    'social_network.apps.SocialNetworkConfig',
 ]
 
 MIDDLEWARE = [
@@ -86,8 +88,12 @@ WSGI_APPLICATION = 'ma_book.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ma_book',
+        'USER': 'ma_admin',
+        'PASSWORD': env.str('DB_PASS'),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -129,6 +135,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -141,3 +150,4 @@ MESSAGE_TAGS = {
 
 POSTS_PER_PAGE = 5
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_URL = '/user/login'

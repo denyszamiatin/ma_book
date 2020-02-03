@@ -45,8 +45,8 @@ def show(request):
         form = HashTagForm(request.POST)
         if form.is_valid():
             hash_tags = form.cleaned_data['hash_tags'].split()
-        for hash_tag in hash_tags:
-            posts = posts.filter(tags__hash_tag=hash_tag)
+            for hash_tag in hash_tags:
+                posts = posts.filter(tags__hash_tag=hash_tag)
     elif 'hash_tag' in request.GET:
         posts = Post.objects.filter(tags__hash_tag=request.GET['hash_tag'])
     else:

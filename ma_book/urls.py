@@ -21,6 +21,7 @@ from ma_book import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('social_network.urls', namespace='social_network')),
     path('user/', include('users.urls', namespace='users')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('gallery/', include('gallery.urls', namespace='gallery')),
