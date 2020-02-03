@@ -49,10 +49,11 @@ def user_login(request):
 
 @login_required
 def user_profile(request, username):
-    user = User.objects.get(username=username)
-    my_followers = [relation.current_user for relation in Relations.objects.filter(follows=user)]
-    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=user)]
+    owner = User.objects.get(username=username)
+    my_followers = [relation.current_user for relation in Relations.objects.filter(follows=owner)[:4]]
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=owner)[:4]]
     context = {
+        'owner': owner,
         'username': username,
         'my_followers': my_followers,
         'i_follow': i_follow
@@ -95,33 +96,60 @@ def edit_user_profile(request):
             avatar_form.save()
             user_form.save()
             profile_form.save()
-            return redirect(reverse('users:profile'))
+            return redirect(f"/user/profile/{request.user.username}")
         elif user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.user = request.user
             profile_form.save()
-            return redirect(reverse('users:profile'))
+            return redirect(f"/user/profile/{request.user.username}")
+    try:
+        img = profile.avatar.url
+    except ValueError:
+        img = ''
+        messages.info(request, 'Consider adding image to your profile, so other people can see you.')
     return render(request, 'users/edit.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'img': profile.avatar.url,
+        'img': img,
     })
 
 
 @login_required
-def follow(request, username):
-    if Relations.objects.filter(current_user=request.user, follows=User.objects.get(username=username)):
-        messages.error(request, f'You already follow user {username}')
-    else:
-        new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
-        new_relation.save()
+def follow(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        url = request.POST.get('url')
+        if Relations.objects.filter(current_user=request.user, follows=User.objects.get(username=username)):
+            messages.error(request, f'You already follow user {username}')
+        else:
+            new_relation = Relations(current_user=request.user, follows=User.objects.get(username=username))
+            new_relation.save()
+            return redirect(url)
     return redirect(reverse('users:search'))
 
 @login_required
-def unfollow(request, username):
-    try:
-        old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
-        old_relation.delete()
-    except Relations.DoesNotExist:
-        messages.error(request, f"You already don't follow user {username}")
+def unfollow(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        url = request.POST.get('url')
+        try:
+            old_relation = Relations.objects.get(current_user=request.user, follows=User.objects.get(username=username))
+            old_relation.delete()
+        except Relations.DoesNotExist:
+            messages.error(request, f"You already don't follow user {username}")
+        return redirect(url)
     return redirect(reverse('users:search'))
+
+@login_required
+def show_all_followers(request, username):
+    owner = User.objects.get(username=username)
+    my_followers = [relation.current_user for relation in Relations.objects.filter(follows=owner)]
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=owner)]
+    return render(request, 'users/followers.html', {'my_followers': my_followers, 'i_follow': i_follow, 'owner': owner})
+
+@login_required
+def show_who_i_follow(request, username):
+    owner = User.objects.get(username=username)
+    i_follow = [relation.follows for relation in Relations.objects.filter(current_user=owner)]
+    return render(request, 'users/i_follow.html', {'i_follow': i_follow, 'owner': owner})
+

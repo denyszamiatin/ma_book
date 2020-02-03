@@ -23,9 +23,19 @@
                 <li>
                     <a href="{% url 'users:profile' user.username %}">{{user.username}}</a>
                     {% if user in i_follow %}
-                        <a href="{% url 'users:unfollow' user.username %}"><button type="button" class="btn btn-default">Stop follow</button></a>
+                        <form method="post" action="{% url 'users:unfollow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="unfollow" value="Stop follow" role="button" class="btn btn-danger btn-sm" style="width: 15%">
+                            <input type="hidden" name="url" value="{% url 'users:search'%}">
+                            <input type="hidden" name="username" value="{{ user.username }}">
+                        </form>
                     {% else %}
-                        <a href="{% url 'users:follow' user.username %}"><button type="button" class="btn btn-default">Follow</button></a>
+                        <form method="post" action="{% url 'users:follow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="follow" value="Follow" role="button" class="btn btn-info btn-sm" style="width: 15%">
+                            <input type="hidden" name="url" value="{% url 'users:search' %}">
+                            <input type="hidden" name="username" value="{{ user.username }}">
+                        </form>
                     {% endif %}
                 </li>
             </ul>
