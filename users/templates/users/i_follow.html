@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+th, td {
+    text-align: center;
+}
+</style>
+<div class="container">
+    <h2 style="text-align: center">The people I follow</h2>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Image</th>
+            <th>Username</th>
+            <th>Fullname</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% for person in i_follow %}
+        <tr>
+            <td>
+                {% if person.userprofile.avatar %}
+                    <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ person.userprofile.avatar.url }}">
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'users:profile' person.username %}">{{ person.username }}</a>
+            </td>
+            <td>
+                {% if person.first_name and person.last_name %}
+                    {{ person.first_name }} {{ person.last_name }}
+                {% else %}
+                    <span>Not specified</span>
+                {% endif %}
+            </td>
+            <td>{{ person.email }}</td>
+            <td>
+                <form method="post" action="{% url 'users:unfollow'%}">
+                    {% csrf_token %}
+                    <input type="submit" name="unfollow" value="Stop follow" role="button" class="btn btn-danger" style="width: 100%">
+                    <input type="hidden" name="url" value="{% url 'users:i_follow' owner.username %}">
+                    <input type="hidden" name="username" value="{{ person.username }}">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+{% endblock %}

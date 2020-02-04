@@ -1,0 +1,42 @@
+<!--        Profile page of other users as seen by currently logged in user -->
+<div class="content-section">
+        <div class="media">
+            {% if owner.userprofile.avatar %}
+                <img class="rounded-circle account-img" style="width:256px;height:256px;" src="{{ owner.userprofile.avatar.url }}">
+            {% endif %}
+            <div class="media-body">
+                <h1>You are watching <b>{{ owner.username }}'s</b> profile</h1>
+                <p class="text-secondary">{{ owner.email }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% if my_followers %}
+            <table style="width: 35%">
+                <tr>
+                    <td colspan="4" style="font-size: 150%">{{ owner.username }}'s followers</td>
+                </tr>
+                <tr>
+                {% for follower in my_followers %}
+                    <td>
+                        {% if follower.userprofile.avatar %}
+                            <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ follower.userprofile.avatar.url }}">
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                </tr>
+                <tr>
+                {% for follower in my_followers %}
+                    <td>
+                        <a href="{% url 'users:profile' follower.username %}">{{ follower.username }}</a>
+                    </td>
+                {% endfor %}
+                </tr>
+                 <tr>
+                    <td colspan="4"><a href="{% url 'users:all_followers' owner.username %}" role="button" class="btn btn-dark" style="width: 100%">See all</a></td>
+                </tr>
+            </table>
+        {% else %}
+            <h2>You have no followers</h2>
+        {% endif %}
+    </div><br>
