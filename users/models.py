@@ -21,33 +21,27 @@ class UserProfile(models.Model):
         return f'Username:{self.user}'
 
 
-class Relations(models.Model):
-    current_user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="current_user")
-    follows = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed_by_current_user")
-    started = models.DateTimeField(auto_now_add=True, db_index=True)
-
-    def __repr__(self):
-        return f"{self.current_user} follows {self.follows}"
-
-    @classmethod
-    def get_followers(cls, username, number=-1):
+class FollowersManager(models.Manager):
+    def get_followers(self, username, number=-1):
         """
-        Return list of followers of a user. If parameter number is not set or negative, return all followers.
+        Return list of followers of a user. If parameter 'number' is not set or is not positive, return all followers.
         :param username: str  --  username of a user who's follower to return
         :param number: int  --  number of followers to return
         :return: list
         """
         if not isinstance(number, int):
             raise TypeError('Integer value expected')
-        user = User.objects.get(username=username)
+        from django.db import connection
+        user_id = User.objects.get(username=username).id
+        query = f"SELECT current_user_id FROM users_relations WHERE follows_id = {user_id}"
         if number > 0:
-            followers = [relation.current_user for relation in cls.objects.filter(follows=user)][:number]
-        else:
-            followers = [relation.current_user for relation in cls.objects.filter(follows=user)]
+            query = query + f"LIMIT {number}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            followers = [User.objects.get(id=id_[0]) for id_ in cursor.fetchall()]
         return followers
 
-    @classmethod
-    def get_who_i_follow(cls, username, number=-1):
+    def get_who_i_follow(self, username, number=-1):
         """
         Return list of all people who user follows
         :param username: str  --  username of user who follows
@@ -56,9 +50,23 @@ class Relations(models.Model):
         """
         if not isinstance(number, int):
             raise TypeError('Integer value expected')
-        user = User.objects.get(username=username)
+        from django.db import connection
+        user_id = User.objects.get(username=username).id
+        query = f"SELECT follows_id FROM users_relations WHERE current_user_id = {user_id}"
         if number > 0:
-            people_i_follow = [relation.follows for relation in cls.objects.filter(current_user=user)][:number]
-        else:
-            people_i_follow = [relation.follows for relation in cls.objects.filter(current_user=user)]
+            query = query + f"LIMIT {number}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            people_i_follow = [User.objects.get(id=id_[0]) for id_ in cursor.fetchall()]
         return people_i_follow
+
+
+class Relations(models.Model):
+    current_user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="current_user")
+    follows = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed_by_current_user")
+    started = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    objects = FollowersManager()
+
+    def __repr__(self):
+        return f"{self.current_user} follows {self.follows}"

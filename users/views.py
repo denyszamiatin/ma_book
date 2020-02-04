@@ -50,8 +50,8 @@ def user_login(request):
 @login_required
 def user_profile(request, username):
     owner = User.objects.get(username=username)
-    my_followers = Relations.get_followers(username, number=4)
-    i_follow = Relations.get_who_i_follow(username, number=4)
+    my_followers = Relations.objects.get_followers(username, number=4)
+    i_follow = Relations.objects.get_who_i_follow(username, number=4)
     context = {
         'owner': owner,
         'username': username,
@@ -65,7 +65,7 @@ def user_profile(request, username):
 def search(request):
     form = SearchForm()
     search_result = []
-    i_follow = Relations.get_who_i_follow(request.user.username)
+    i_follow = Relations.objects.get_who_i_follow(request.user.username)
     if request.method == 'GET':
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -144,13 +144,13 @@ def unfollow(request):
 @login_required
 def show_all_followers(request, username):
     owner = User.objects.get(username=username)
-    my_followers = Relations.get_followers(username)
-    i_follow = Relations.get_who_i_follow(username)
+    my_followers = Relations.objects.get_followers(username)
+    i_follow = Relations.objects.get_who_i_follow(username)
     return render(request, 'users/followers.html', {'my_followers': my_followers, 'i_follow': i_follow, 'owner': owner})
 
 @login_required
 def show_who_i_follow(request, username):
     owner = User.objects.get(username=username)
-    i_follow = Relations.get_who_i_follow(username)
+    i_follow = Relations.objects.get_who_i_follow(username)
     return render(request, 'users/i_follow.html', {'i_follow': i_follow, 'owner': owner})
 
