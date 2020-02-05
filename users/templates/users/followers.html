@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+th, td {
+    text-align: center;
+}
+</style>
+{% if owner.username == user.username %}
+    <div class="container">
+        <h2 style="text-align: center">My followers</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for follower in my_followers %}
+            <tr>
+                <td>
+                    {% if follower.userprofile.avatar %}
+                        <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ follower.userprofile.avatar.url }}">
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'users:profile' follower.username %}">{{ follower.username }}</a></td>
+                <td>
+                    {% if follower.first_name and follower.last_name %}
+                        {{ follower.first_name }} {{ follower.last_name }}
+                    {% else %}
+                        <span>Not specified</span>
+                    {% endif %}
+                </td>
+                <td>{{ follower.email }}</td>
+                <td>
+                    {% if follower in i_follow %}
+                        <form method="post" action="{% url 'users:unfollow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="unfollow" value="Stop follow" role="button" class="btn btn-danger" style="width: 100%">
+                            <input type="hidden" name="url" value="{% url 'users:all_followers' owner.username %}">
+                            <input type="hidden" name="username" value="{{ follower.username }}">
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'users:follow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="follow" value="Follow" role="button" class="btn btn-info" style="width: 100%">
+                            <input type="hidden" name="url" value="{% url 'users:all_followers' owner.username %}">
+                            <input type="hidden" name="username" value="{{ follower.username }}">
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="container">
+        <h2 style="text-align: center">{{ owner.username }}'s followers</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for follower in my_followers %}
+            <tr>
+                <td>
+                    {% if follower.userprofile.avatar %}
+                        <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ follower.userprofile.avatar.url }}">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'users:profile' follower.username %}">{{ follower.username }}</a>
+                </td>
+                <td>
+                    {% if follower.first_name and follower.last_name %}
+                        {{ follower.first_name }} {{ follower.last_name }}
+                    {% else %}
+                        <span>Not specified</span>
+                    {% endif %}
+                </td>
+                <td>{{ follower.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,43 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="content-section">
-        <div class="media">
-            {% if user.userprofile.avatar %}
-            <img class="rounded-circle account-img" src="{{ user.userprofile.avatar.url }}">
-            {% endif %}
-            <div class="media-body">
-                {% if username == user.username %}
-                    <h1 class="account-heading">{{ user.username }}</h1>
-                    <p class="text-secondary">{{ user.email }}</p>
-                {% else %}
-                    <h3>You are watching <b>{{ username }}'s</b> profile</h3>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        {% if my_followers %}
-            <h2>Your followers</h2>
-            <ul>
-            {% for follower in my_followers %}
-                <li>{{ follower.username }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <h2>You have no followers</h2>
-        {% endif %}
-    </div>
-    <div class="container">
-        {% if i_follow %}
-        <h2>People that you follow</h2>
-            <ul>
-            {% for person in i_follow %}
-                <li>{{ person.username }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <h2>You do not follow anyone</h2>
-        {% endif %}
-    </div>
+<style>
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    text-align: center;
+}
+</style>
+<!-- Profile of current user -->
+{% if username == user.username %}
+   {% include './profile_current.html' %}
+{% else %}
+<!-- Profile of other users -->
+    {% include './profile_others.html' %}
+{% endif %}
 {% endblock %}
