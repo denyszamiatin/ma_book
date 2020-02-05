@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import user_registration, user_login, user_profile, search, edit_user_profile,\
-    follow, unfollow, show_all_followers, show_who_i_follow
+    follow, unfollow, show_all_followers, show_who_i_follow, friends_list
 
 app_name = "users"
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path('unfollow', unfollow, name='unfollow'),
     path('followers/<username>', show_all_followers, name='all_followers'),
     path('i_follow/<username>', show_who_i_follow, name='i_follow'),
+    path('friends_list', friends_list, name='friends_list'),
 ]

@@ -141,6 +141,7 @@ def unfollow(request):
         return redirect(url)
     return redirect(reverse('users:search'))
 
+
 @login_required
 def show_all_followers(request, username):
     owner = User.objects.get(username=username)
@@ -148,9 +149,17 @@ def show_all_followers(request, username):
     i_follow = Relations.objects.get_who_i_follow(username)
     return render(request, 'users/followers.html', {'my_followers': my_followers, 'i_follow': i_follow, 'owner': owner})
 
+
 @login_required
 def show_who_i_follow(request, username):
     owner = User.objects.get(username=username)
     i_follow = Relations.objects.get_who_i_follow(username)
     return render(request, 'users/i_follow.html', {'i_follow': i_follow, 'owner': owner})
 
+
+@login_required
+def friends_list(request):
+    i_follow = Relations.objects.get_who_i_follow(request.user)
+    my_followers = Relations.objects.get_followers(request.user)
+    friends = [i for i in i_follow if i in my_followers]
+    return render(request, 'users/friends_list.html', {'friends': friends})
