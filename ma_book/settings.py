@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'gallery.apps.GalleryConfig',
     'social_network.apps.SocialNetworkConfig',
+    'news.apps.NewsConfig',
 ]
 
 MIDDLEWARE = [

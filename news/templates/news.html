@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for news in news_objects %}
+            <h3>{{ news.title }}</h3>
+            <a class="btn-link" href="/user/profile/{{ news.author }}"><h5>{{ news.author }}</h5></a>
+            <div class="container"><p>{{ news.text }} </p></div>
+    {% endfor %}
+{% endblock %}
