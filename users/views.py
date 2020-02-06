@@ -154,3 +154,5 @@ def show_who_i_follow(request, username):
     i_follow = Relations.objects.get_who_i_follow(username)
     return render(request, 'users/i_follow.html', {'i_follow': i_follow, 'owner': owner})
 
+
+
