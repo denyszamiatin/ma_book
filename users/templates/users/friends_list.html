@@ -1,7 +1,98 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for friend in friends %}
-    <p> {{ friend }} </p>
-{% endfor %}
+<style>
+th, td {
+    text-align: center;
+}
+</style>
+{% if owner.username == user.username %}
+    <div class="container">
+        <h2 style="text-align: center">My friends</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for friend in friends %}
+            <tr>
+                <td>
+                    {% if friend.userprofile.avatar %}
+                        <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ friend.userprofile.avatar.url }}">
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'users:profile' friend.username %}">{{ friend.username }}</a></td>
+                <td>
+                    {% if friend.first_name and friend.last_name %}
+                        {{ friend.first_name }} {{ friend.last_name }}
+                    {% else %}
+                        <span>Not specified</span>
+                    {% endif %}
+                </td>
+                <td>{{ friend.email }}</td>
+                <td>
+                    {% if friend in friends %}
+                        <form method="post" action="{% url 'users:unfollow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="unfollow" value="Stop follow" role="button" class="btn btn-danger" style="width: 100%">
+                            <input type="hidden" name="url" value="{% url 'users:friends_list' owner.username %}">
+                            <input type="hidden" name="username" value="{{ friend.username }}">
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'users:follow'%}">
+                            {% csrf_token %}
+                            <input type="submit" name="follow" value="Follow" role="button" class="btn btn-info" style="width: 100%">
+                            <input type="hidden" name="url" value="{% url 'users:friends_list' owner.username %}">
+                            <input type="hidden" name="username" value="{{ friend.username }}">
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="container">
+        <h2 style="text-align: center">{{ owner.username }}'s friends</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for friend in friends %}
+            <tr>
+                <td>
+                    {% if friend.userprofile.avatar %}
+                        <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ friend.userprofile.avatar.url }}">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'users:profile' friend.username %}">{{ friend.username }}</a>
+                </td>
+                <td>
+                    {% if friend.first_name and friend.last_name %}
+                        {{ friend.first_name }} {{ friend.last_name }}
+                    {% else %}
+                        <span>Not specified</span>
+                    {% endif %}
+                </td>
+                <td>{{ friend.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% endif %}
 {% endblock %}

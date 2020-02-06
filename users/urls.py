@@ -16,5 +16,5 @@ urlpatterns = [
     path('unfollow', unfollow, name='unfollow'),
     path('followers/<username>', show_all_followers, name='all_followers'),
     path('i_follow/<username>', show_who_i_follow, name='i_follow'),
-    path('friends_list', friends_list, name='friends_list'),
+    path('friends_list/<username>', friends_list, name='friends_list'),
 ]

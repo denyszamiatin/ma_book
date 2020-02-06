@@ -60,6 +60,18 @@ class FollowersManager(models.Manager):
             people_i_follow = [User.objects.get(id=id_[0]) for id_ in cursor.fetchall()]
         return people_i_follow
 
+    def get_friends_list(self, username):
+        """
+        Return the friends list
+        (people who follows you and you follow them)
+        :return:
+        """
+        followed = self.get_who_i_follow(username=username)
+        followers = self.get_followers(username=username)
+        friends_list = [i for i in followed if i in followers]
+        friends_objects = User.objects.filter(username__in=friends_list)
+        return friends_objects
+
 
 class Relations(models.Model):
     current_user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="current_user")

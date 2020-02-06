@@ -52,11 +52,13 @@ def user_profile(request, username):
     owner = User.objects.get(username=username)
     my_followers = Relations.objects.get_followers(username, number=4)
     i_follow = Relations.objects.get_who_i_follow(username, number=4)
+    friends = Relations.objects.get_friends_list(username)
     context = {
         'owner': owner,
         'username': username,
         'my_followers': my_followers,
-        'i_follow': i_follow
+        'i_follow': i_follow,
+        'friends': friends
     }
     return render(request, 'users/profile.html', context)
 
@@ -158,8 +160,7 @@ def show_who_i_follow(request, username):
 
 
 @login_required
-def friends_list(request):
-    i_follow = Relations.objects.get_who_i_follow(request.user)
-    my_followers = Relations.objects.get_followers(request.user)
-    friends = [i for i in i_follow if i in my_followers]
-    return render(request, 'users/friends_list.html', {'friends': friends})
+def friends_list(request, username):
+    owner = User.objects.get(username=username)
+    friends = Relations.objects.get_friends_list(username)
+    return render(request, 'users/friends_list.html', {'friends': friends, 'owner': owner})
