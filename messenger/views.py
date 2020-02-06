@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import redirect, reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .models import User, Messages
@@ -16,7 +16,7 @@ def send(request):
             message = Messages(sender=sender, receiver=receiver, message=form.cleaned_data['users_message'])
             message.save()
             messages.success(request, f'Message sent to {receiver.username}')
-            return redirect(reverse(f'user/profile/{receiver.username}'))
+            return redirect(reverse('users:profile', args=(receiver.username,)))
         messages.error(request, 'Invalid input')
-        return redirect(f"user/profile/{receiver.username}")
+        return redirect(reverse('users:profile', args=(receiver.username,)))
     raise Http404("Page does not exist")
