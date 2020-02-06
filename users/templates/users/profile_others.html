@@ -35,8 +35,31 @@
                  <tr>
                     <td colspan="4"><a href="{% url 'users:all_followers' owner.username %}" role="button" class="btn btn-dark" style="width: 100%">See all</a></td>
                 </tr>
+                <tr>
+                    <td colspan="4"><button class="open-button btn btn-dark" onclick="openForm()">Send message</button></td>
+                </tr>
+                <div class="form-popup" id="myForm">
+                    <form action="{% url 'messenger:send_message' %}" class="form-container" method="post">
+                        {% csrf_token %}
+                        <h3>Message to {{username}}</h3>
+                        {{form.users_message}}
+                        <input type="hidden" name="receiver" value="{{username}}">
+                        <br>
+                        <button type="submit" class="btn btn-success">Send</button>
+                        <button type="button" class="btn btn-danger" onclick="closeForm()">Close</button>
+                    </form>
+                </div>
             </table>
         {% else %}
             <h2>You have no followers</h2>
         {% endif %}
     </div><br>
+
+<script>
+function openForm() {
+    document.getElementById("myForm").style.display = "block";
+    }
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+    }
+</script>

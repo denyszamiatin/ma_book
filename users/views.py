@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import User, UserProfile, Relations
 from .forms import RegistrationForm, UserProfileForm, LoginForm, SearchForm, EditUserForm, EditUserProfileForm, EditUserAvatar
+from messenger.forms import MessageForm
 
 
 def user_registration(request):
@@ -52,11 +53,13 @@ def user_profile(request, username):
     owner = User.objects.get(username=username)
     my_followers = Relations.objects.get_followers(username, number=4)
     i_follow = Relations.objects.get_who_i_follow(username, number=4)
+    form = MessageForm()
     context = {
         'owner': owner,
         'username': username,
         'my_followers': my_followers,
-        'i_follow': i_follow
+        'i_follow': i_follow,
+        'form': form,
     }
     return render(request, 'users/profile.html', context)
 

@@ -25,4 +25,5 @@ urlpatterns = [
     path('user/', include('users.urls', namespace='users')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('gallery/', include('gallery.urls', namespace='gallery')),
+    path('messenger/', include('messenger.urls', namespace='messenger')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
