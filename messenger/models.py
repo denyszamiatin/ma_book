@@ -16,12 +16,9 @@ class Messages(models.Model):
         :return: list of User objects witch have opened dialogue with current user
         """
         dialogs = Messages.objects.filter(Q(sender=current_user_id) |
-                                          Q(receiver=current_user_id)).values('sender', 'receiver').distinct()
-        dialogue_participants = [(dialog['sender'], dialog['receiver']) for dialog in dialogs]
-        for i, pair in enumerate(dialogue_participants):
-            if pair[::-1] in dialogue_participants[i:]:
-                dialogue_participants.pop(dialogue_participants.index(pair[::-1]))
-        users = [item for pair in dialogue_participants for item in pair if item != current_user_id]
+                                          Q(receiver=current_user_id)).values('receiver', 'sender').distinct()
+        users = {dialog['receiver'] for dialog in dialogs} | {dialog['sender'] for dialog in dialogs}
+        users.remove(current_user_id)
         return [User.objects.get(pk=id_) for id_ in users]
 
     def get_messages(self, first_id, second_id):
