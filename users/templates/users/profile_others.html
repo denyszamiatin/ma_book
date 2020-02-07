@@ -44,7 +44,8 @@
                         <h3>Message to {{username}}</h3>
                         {{form.users_message}}
                         <input type="hidden" name="receiver" value="{{username}}">
-                        <br><br>
+                        <input type="hidden" name="redirect_to" value="profile">
+                        <br>
                         <button type="submit" class="btn btn-success">Send</button>
                         <button type="button" class="btn btn-danger" onclick="closeForm()">Close</button>
                     </form>

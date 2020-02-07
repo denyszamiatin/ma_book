@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+{% block content %}
+<h2>Dialogue with <a href="{% url 'users:profile' send_to %}">{{send_to}}</a></h2>
+{% for message_ in users_messages %}
+<ul class="list-unstyled">
+    <li>{{message_.sender}}:{{message_.message}}<small>{{message_.send_date}}</small></li>
+</ul>
+{% endfor %}
+<form action="{% url 'messenger:send_message' %}" class="form-container" method="post">
+    {% csrf_token %}
+    <h3>Message to {{send_to}}</h3>
+    {{form.users_message}}
+    <input type="hidden" name="receiver" value="{{send_to}}">
+    <input type="hidden" name="redirect_to" value="dialogue">
+    <br><br>
+    <button type="submit" class="btn btn-success">Send</button>
+</form>
+{% endblock %}

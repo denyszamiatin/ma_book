@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for dialog in dialogs%}
+<ul class="list-unstyled">
+    <li><a href="{% url 'users:profile' dialog.username%}">{{dialog.username}}</a>
+    <form action="{% url 'messenger:dialogue' dialog.username%}" method="get" class="form-container">
+        <button type="submit" class="btn btn-success">Open dialogue</button>
+    </form>
+    </li>
+</ul>
+{% endfor %}
+{% endblock %}
