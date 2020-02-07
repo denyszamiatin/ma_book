@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for dialog in dialogs%}
+<h1 class="text-center">Messenger</h1>
+{% if not dialogs %}
+<p>No messages yet</p>
+{% else %}
+{% for dialog in dialogs %}
 <ul class="list-unstyled">
     <li><a href="{% url 'users:profile' dialog.username%}">{{dialog.username}}</a>
     <form action="{% url 'messenger:dialogue' dialog.username%}" method="get" class="form-container">
@@ -9,4 +13,5 @@
     </li>
 </ul>
 {% endfor %}
+{% endif %}
 {% endblock %}

@@ -17,6 +17,8 @@ class Messages(models.Model):
         """
         dialogs = Messages.objects.filter(Q(sender=current_user_id) |
                                           Q(receiver=current_user_id)).values('receiver', 'sender').distinct()
+        if not dialogs:
+            return []
         users = {dialog['receiver'] for dialog in dialogs} | {dialog['sender'] for dialog in dialogs}
         users.remove(current_user_id)
         return [User.objects.get(pk=id_) for id_ in users]
