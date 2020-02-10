@@ -10,6 +10,36 @@
         </div>
     </div>
 </div>
+<div class="container">
+        {% if friends %}
+            <table style="width: 35%">
+                <tr>
+                    <td colspan="4" style="font-size: 150%">My friends</td>
+                </tr>
+                <tr>
+                {% for friend in friends %}
+                    <td>
+                        {% if friend.userprofile.avatar %}
+                            <img class="rounded-circle account-img" style="width:60px;height:60px;" src="{{ friend.userprofile.avatar.url }}">
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                </tr>
+                <tr>
+                {% for friend in friends %}
+                    <td>
+                        <a href="{% url 'users:profile' friend.username %}">{{ friend.username }}</a>
+                    </td>
+                {% endfor %}
+                </tr>
+                 <tr>
+                    <td colspan="4"><a href="{% url 'users:friends_list' owner.username %}" role="button" class="btn btn-dark" style="width: 100%">See all</a></td>
+                </tr>
+            </table>
+        {% else %}
+            <h2>You have no friends</h2>
+        {% endif %}
+    </div>
 <!--        Followers-->
     <div class="container">
         {% if my_followers %}
