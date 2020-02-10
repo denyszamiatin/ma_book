@@ -68,9 +68,8 @@ class FollowersManager(models.Manager):
         """
         followed = self.get_who_i_follow(username=username)
         followers = self.get_followers(username=username)
-        friends_list = [i for i in followed if i in followers]
-        friends_objects = User.objects.filter(username__in=friends_list)
-        return friends_objects
+        friends_list = {i for i in followed if i in followers}
+        return friends_list
 
 
 class Relations(models.Model):
