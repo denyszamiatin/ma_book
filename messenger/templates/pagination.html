@@ -1,0 +1,11 @@
+<p>
+    <a href="?p=1">&lt;&lt;</a>
+    {% if users_messages.has_previous %}
+    <a href="?p={{users_messages.previous_page_number}}">&lt;</a>
+    {% endif %}
+    {{users_messages}}
+    {% if users_messages.has_next %}
+    <a href="?p={{users_messages.next_page_number}}">&gt;</a>
+    {% endif %}
+    <a href="?p={{last_page}}">&gt;&gt;</a>
+</p>

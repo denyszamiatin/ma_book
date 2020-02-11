@@ -7,17 +7,7 @@
         <li>{{message_.sender}}: {{message_.message}}<small><br>{{message_.send_date}}</small></li>
     </ul>
     {% endfor %}
-    <p>
-        <a href="?p=1">&lt;&lt;</a>
-        {% if users_messages.has_previous %}
-        <a href="?p={{users_messages.previous_page_number}}">&lt;</a>
-        {% endif %}
-        {{users_messages}}
-        {% if users_messages.has_next %}
-        <a href="?p={{users_messages.next_page_number}}">&gt;</a>
-        {% endif %}
-        <a href="?p={{last_page}}">&gt;&gt;</a>
-    </p>
+    {% include 'pagination.html' %}
     <form action="{% url 'messenger:send_message' %}" class="form-container" method="post">
         {% csrf_token %}
         <h3>Message to {{send_to}}</h3>

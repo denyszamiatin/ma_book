@@ -2,10 +2,10 @@
 {% block content %}
 <div class="text-center">
     <h1 class="text-center">Messenger</h1>
-    {% if not dialogs %}
+    {% if not users_messages %}
     <p>No messages yet</p>
     {% else %}
-    {% for dialog in dialogs.object_list %}
+    {% for dialog in users_messages.object_list %}
     <ul class="list-unstyled">
         <li><a href="{% url 'users:profile' dialog.username%}">{{dialog.username}}</a>
         <form action="{% url 'messenger:dialogue' dialog.username%}" method="get" class="form-container">
@@ -14,17 +14,7 @@
         </li>
     </ul>
     {% endfor %}
-    <p>
-        <a href="?p=1">&lt;&lt;</a>
-        {% if dialogs.has_previous %}
-        <a href="?p={{dialogs.previous_page_number}}">&lt;</a>
-        {% endif %}
-        {{dialogs}}
-        {% if dialogs.has_next %}
-        <a href="?p={{dialogs.next_page_number}}">&gt;</a>
-        {% endif %}
-        <a href="?p={{last_page}}">&gt;&gt;</a>
-    </p>
+    {% include 'pagination.html' %}
 </div>
 {% endif %}
 {% endblock %}

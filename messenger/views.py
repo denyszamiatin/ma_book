@@ -31,7 +31,7 @@ def send(request):
 def dialogs(request):
     dialogs_ = Messages().get_dialogs(request.user.id)
     page, last_page = utils.make_pagination(request, dialogs_)
-    return render(request, 'dialogs.html', {'dialogs': page, 'last_page': last_page})
+    return render(request, 'dialogs.html', {'users_messages': page, 'last_page': last_page})
 
 
 @login_required
