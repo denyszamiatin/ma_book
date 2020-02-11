@@ -1,18 +1,31 @@
 {% extends 'base.html'%}
 {% block content %}
-<h2>Dialogue with <a href="{% url 'users:profile' send_to %}">{{send_to}}</a></h2>
-{% for message_ in users_messages %}
-<ul class="list-unstyled">
-    <li>{{message_.sender}}:{{message_.message}}<small>{{message_.send_date}}</small></li>
-</ul>
-{% endfor %}
-<form action="{% url 'messenger:send_message' %}" class="form-container" method="post">
-    {% csrf_token %}
-    <h3>Message to {{send_to}}</h3>
-    {{form.users_message}}
-    <input type="hidden" name="receiver" value="{{send_to}}">
-    <input type="hidden" name="redirect_to" value="dialogue">
-    <br><br>
-    <button type="submit" class="btn btn-success">Send</button>
-</form>
+<div class="text-center">
+    <h2>Dialogue with <a href="{% url 'users:profile' send_to %}">{{send_to}}</a></h2><br>
+    {% for message_ in users_messages.object_list %}
+    <ul class="list-unstyled">
+        <li>{{message_.sender}}: {{message_.message}}<small><br>{{message_.send_date}}</small></li>
+    </ul>
+    {% endfor %}
+    <p>
+        <a href="?p=1">&lt;&lt;</a>
+        {% if users_messages.has_previous %}
+        <a href="?p={{users_messages.previous_page_number}}">&lt;</a>
+        {% endif %}
+        {{users_messages}}
+        {% if users_messages.has_next %}
+        <a href="?p={{users_messages.next_page_number}}">&gt;</a>
+        {% endif %}
+        <a href="?p={{last_page}}">&gt;&gt;</a>
+    </p>
+    <form action="{% url 'messenger:send_message' %}" class="form-container" method="post">
+        {% csrf_token %}
+        <h3>Message to {{send_to}}</h3>
+        {{form.users_message}}
+        <input type="hidden" name="receiver" value="{{send_to}}">
+        <input type="hidden" name="redirect_to" value="dialogue">
+        <br><br>
+        <button type="submit" class="btn btn-success">Send</button>
+    </form>
+</div>
 {% endblock %}

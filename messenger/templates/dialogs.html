@@ -1,17 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="text-center">Messenger</h1>
-{% if not dialogs %}
-<p>No messages yet</p>
-{% else %}
-{% for dialog in dialogs %}
-<ul class="list-unstyled">
-    <li><a href="{% url 'users:profile' dialog.username%}">{{dialog.username}}</a>
-    <form action="{% url 'messenger:dialogue' dialog.username%}" method="get" class="form-container">
-        <button type="submit" class="btn btn-success">Open dialogue</button>
-    </form>
-    </li>
-</ul>
-{% endfor %}
+<div class="text-center">
+    <h1 class="text-center">Messenger</h1>
+    {% if not dialogs %}
+    <p>No messages yet</p>
+    {% else %}
+    {% for dialog in dialogs.object_list %}
+    <ul class="list-unstyled">
+        <li><a href="{% url 'users:profile' dialog.username%}">{{dialog.username}}</a>
+        <form action="{% url 'messenger:dialogue' dialog.username%}" method="get" class="form-container">
+            <button type="submit" class="btn btn-success">Open dialogue</button>
+        </form>
+        </li>
+    </ul>
+    {% endfor %}
+    <p>
+        <a href="?p=1">&lt;&lt;</a>
+        {% if dialogs.has_previous %}
+        <a href="?p={{dialogs.previous_page_number}}">&lt;</a>
+        {% endif %}
+        {{dialogs}}
+        {% if dialogs.has_next %}
+        <a href="?p={{dialogs.next_page_number}}">&gt;</a>
+        {% endif %}
+        <a href="?p={{last_page}}">&gt;&gt;</a>
+    </p>
+</div>
 {% endif %}
 {% endblock %}

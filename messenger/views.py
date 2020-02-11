@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import User, Messages
 from .forms import MessageForm
+from . import utils
 
 
 @login_required
@@ -29,7 +30,8 @@ def send(request):
 @login_required
 def dialogs(request):
     dialogs_ = Messages().get_dialogs(request.user.id)
-    return render(request, 'dialogs.html', {'dialogs': dialogs_})
+    page, last_page = utils.make_pagination(request, dialogs_)
+    return render(request, 'dialogs.html', {'dialogs': page, 'last_page': last_page})
 
 
 @login_required
@@ -37,4 +39,6 @@ def dialogue(request, username):
     form = MessageForm()
     second_user = get_object_or_404(User, username=username)
     users_dialogue = Messages().get_messages(request.user.id, second_user.id)
-    return render(request, 'dialogue.html', {"users_messages": users_dialogue, "form": form, 'send_to': username})
+    page, last_page = utils.make_pagination(request, users_dialogue)
+    context = {"users_messages": page, "form": form, 'send_to': username, 'last_page': last_page}
+    return render(request, 'dialogue.html', context)
