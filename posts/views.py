@@ -13,7 +13,8 @@ def create(request):
         form = PostForm(request.POST)
         hash_tag_form = HashTagForm(request.POST)
         if form.is_valid() and hash_tag_form.is_valid():
-            post = Post(title=form.cleaned_data['title'], text=form.cleaned_data['text'], author=request.user)
+            post = Post(title=form.cleaned_data['title'], text=form.cleaned_data['text'],
+                        image=form.cleaned_data['image'], author=request.user)
             post.save()
             hash_tags = hash_tag_form.cleaned_data['hash_tags'].split()
             for hash_tag in hash_tags:

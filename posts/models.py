@@ -1,11 +1,19 @@
+from pathlib import Path
 from django.db import models
 from django.utils.timezone import now
 from django.utils.text import slugify
 
 
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{instance}.{ext}"
+    return Path("posts_images", filename)
+
+
 class Post(models.Model):
     title = models.TextField()
     text = models.TextField()
+    image = models.ImageField(upload_to=content_file_name, null=True, blank=True)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     created_date = models.DateTimeField(default=now)
     slug_title = models.SlugField(max_length=60, unique=True, null=True)
